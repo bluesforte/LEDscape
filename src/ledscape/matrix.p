@@ -16,7 +16,7 @@
  * To pause the redraw loop, write a NULL to the buffer pointer.
  * To shut down the PRU, write -1 to the buffer pointer.
  */
-#if 1
+#if 0
 #define MATRIX_HEIGHT 8		// 32x16 matrices
 #else
 #define MATRIX_HEIGHT 16	// 32x32 matrices
@@ -24,7 +24,7 @@
 
 // higher constants == brighter.
 // 4 is a ok brightness, 5 is bright, 6 is powerful
-#define BRIGHT_SHIFT 5
+#define BRIGHT_SHIFT 4
 
 
 #define r11_gpio 2
@@ -156,7 +156,7 @@
 #define gpio1_clock 19
 
 /** Generate a bitmask of which pins in GPIO0-3 are used.
- * 
+ *
  * \todo wtf "parameter too long": only 128 chars allowed?
  */
 
@@ -211,7 +211,7 @@
 #define gpio1_base r17
 #define gpio2_base r18
 #define gpio3_base r19
-#define pixel_data r18 // the next 12 registers, too; 
+#define pixel_data r18 // the next 12 registers, too;
 
 #define CLOCK_LO \
 	MOV out_clr, 1 << gpio1_clock; \
@@ -518,7 +518,7 @@ NEW_ROW_LOOP:
                 QBEQ READ_LOOP, row, MATRIX_HEIGHT
 
 		QBA NEW_ROW_LOOP
-	
+
 EXIT:
 #ifdef AM33XX
     // Send notification to Host for program completion

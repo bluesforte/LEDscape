@@ -265,7 +265,7 @@ ledscape_matrix_draw(
 	// matrix is re-packed such that a 6-byte read will bring in
 	// the brightness values for all six outputs of a given panel.
 	// this means that the rows stride 16 * 3 pixels at a time.
-	// 
+	//
 	// this way the PRU can read all sixteen output pixels in
 	// one LBBO and clock them out.
 	// while there are eight output chains, there are two simultaneous
@@ -292,7 +292,7 @@ ledscape_matrix_draw(
 			// by the current output panel number and the total
 			// number of panels in the chain.
 			uint8_t * const op = &out[6*i + j*panel_stride];
-		
+
 			// copy the top half of this matrix
 			ledscape_matrix_panel_copy(
 				op,
@@ -340,7 +340,7 @@ ledscape_strip_draw(
 			row_out[2*pru_stride] = (p >>  0) & 0xFF; // blue
 		}
 	}
-	
+
 	// Wait for any current command to have been acknowledged
 	while (leds->ws281x->command)
 		;
@@ -606,34 +606,20 @@ ledscape_printf(
 
 /** Default ledscape config */
 #define DEFAULT_MATRIX(i) { \
-		{ 0*32, i*16, 0 }, \
-		{ 1*32, i*16, 0 }, \
-		{ 2*32, i*16, 0 }, \
-		{ 3*32, i*16, 0 }, \
-		{ 4*32, i*16, 0 }, \
-		{ 5*32, i*16, 0 }, \
-		{ 6*32, i*16, 0 }, \
-		{ 7*32, i*16, 0 }, \
+		{ 0*32, i*32, 0 }
 	} \
 
 ledscape_config_t ledscape_matrix_default = {
 	.matrix_config = {
 		.type		= LEDSCAPE_MATRIX,
-		.width		= 256,
-		.height		= 128,
+		.width		= 32,
+		.height		= 32,
 		.panel_width	= 32,
-		.panel_height 	= 16,
-		.leds_width	= 256,
-		.leds_height	= 128,
+		.panel_height 	= 32,
+		.leds_width	= 32,
+		.leds_height	= 32,
 		.panels		= {
-			DEFAULT_MATRIX(0),
-			DEFAULT_MATRIX(1),
-			DEFAULT_MATRIX(2),
-			DEFAULT_MATRIX(3),
-			DEFAULT_MATRIX(4),
-			DEFAULT_MATRIX(5),
-			DEFAULT_MATRIX(6),
-			DEFAULT_MATRIX(7),
+			DEFAULT_MATRIX(0)
 		},
 	},
 };

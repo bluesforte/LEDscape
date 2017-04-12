@@ -17,7 +17,7 @@ main(
 	char ** argv
 )
 {
-	int width = 256;
+	int width = 32;
 	int height = 32;
 
 	ledscape_config_t * config = &ledscape_matrix_default;
