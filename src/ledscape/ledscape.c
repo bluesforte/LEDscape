@@ -606,7 +606,7 @@ ledscape_printf(
 
 /** Default ledscape config */
 #define DEFAULT_MATRIX(i) { \
-		{ 0*32, i*32, 0 }
+		{ 0*32, i*32, 0 } \
 	} \
 
 ledscape_config_t ledscape_matrix_default = {
