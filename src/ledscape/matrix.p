@@ -24,7 +24,7 @@
 
 // higher constants == brighter.
 // 4 is a ok brightness, 5 is bright, 6 is powerful
-#define BRIGHT_SHIFT 4
+#define BRIGHT_SHIFT 2
 
 
 #define r11_gpio 2
@@ -357,7 +357,7 @@ READ_LOOP:
 /********
 	ADD offset, width, width
 	ADD offset, offset, width
-	LSL width, offset, 4
+	LSL width, offset, 1
 */
 
         MOV row, 0
@@ -388,7 +388,7 @@ NEW_ROW_LOOP:
 			// Load the sixteen RGB outputs into
 			// consecutive registers, starting at pixel_data.
 			// This takes about 250 ns
-			LBBO pixel_data, data_addr, offset, 3*16
+			LBBO pixel_data, data_addr, offset, 3*2
 
 			// toggle the clock
 			CLOCK_HI
@@ -411,7 +411,7 @@ NEW_ROW_LOOP:
 
 			OUTPUT_ROW(11, r18.b0, r18.b1, r18.b2)
 			OUTPUT_ROW(12, r18.b3, r19.b0, r19.b1)
-
+/*
 			OUTPUT_ROW(21, r19.b2, r19.b3, r20.b0)
 			OUTPUT_ROW(22, r20.b1, r20.b2, r20.b3)
 
@@ -429,7 +429,7 @@ NEW_ROW_LOOP:
 			OUTPUT_ROW(72, r27.b3, r28.b0, r28.b1)
 			OUTPUT_ROW(81, r28.b2, r28.b3, r29.b0)
 			OUTPUT_ROW(82, r29.b1, r29.b2, r29.b3)
-
+*/
 			// reload the gpio*_base registers
 			// since we have overwritten them with our pixel data
 			MOV gpio2_base, GPIO2
@@ -496,8 +496,8 @@ NEW_ROW_LOOP:
 #endif
 
 
-			ADD offset, offset, 3*16
-			QBNE PIXEL_LOOP, offset, width
+			ADD offset, offset, 3*2
+			QBNE PIXEL_LOOP, offset, 32*6
 
 		// Full data has been clocked out; latch it
 		LATCH_HI
