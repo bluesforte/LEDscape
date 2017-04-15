@@ -118,8 +118,7 @@ main(
 	printf("init done\n");
 
 	//time_t start_time = time(NULL);
-	time_t last_time;
-	time(&last_time);
+	time_t now = time(NULL);
 	unsigned last_i = 0;
 
 	unsigned i = 0;
@@ -132,7 +131,7 @@ main(
 
 	while (1)
 	{
-		last_time_local = localtime(&last_time);
+		last_time_local = localtime(&now);
 		// hours in reddish color
 		strftime(time_buffer, 8, "%H", last_time_local);
 		font_write(p, 0xF21DC4, 0, 0, time_buffer);
@@ -154,21 +153,7 @@ main(
 		ledscape_draw(leds, p);
 		usleep(20000);
 
-		// wait for the previous frame to finish;
-		//const uint32_t response = ledscape_wait(leds);
-		const uint32_t response = 0;
-		time_t now = time(NULL);
-		if (now != last_time)
-		{
-			printf("%d fps. starting %d previous %"PRIx32"\n",
-				i - last_i, i, response);
-			last_i = i;
-			last_time = now;
-		}
-
-		//clean up
-//		free(last_time_local);
-
+		now = time(NULL);
 	}
 
 	ledscape_close(leds);
