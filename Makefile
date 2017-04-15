@@ -9,8 +9,9 @@ SUBDIR-y += src/perlin
 SUBDIR-y += src/mta
 SUBDIR-y += src/net
 SUBDIR-y += src/script
+SUBDIR-y += src/countdown
 
-all: 
+all:
 	for dir in $(SUBDIR-y); do \
 		$(MAKE) -C $$dir || exit 1; \
 	done
@@ -23,4 +24,3 @@ clean:
 
 firmware:
 	echo CAPE-BONE-OCTO > /sys/devices/bone_capemgr.8/slots
-
