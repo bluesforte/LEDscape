@@ -11,8 +11,8 @@
 #include <unistd.h>
 #include "ledscape.h"
 
-const int width = 256;
-const int height = 128;
+const int width = 32;
+const int height = 32;
 
 extern const uint16_t font[][16];
 
@@ -81,7 +81,7 @@ font_write(
 				// wrap in x
 				if (ox < 0)
 					ox += width;
-		
+
 				if (y + h >= height || y + h < 0)
 					continue;
 
@@ -116,6 +116,8 @@ main(
 	ledscape_t * const leds = ledscape_init(config, 0);
 
 	printf("init done\n");
+
+	//time_t start_time = time(NULL);
 	time_t last_time = time(NULL);
 	unsigned last_i = 0;
 
@@ -123,12 +125,15 @@ main(
 	uint32_t * const p = calloc(width*height, 4);
 	int scroll_x = width;
 
+	char time_buffer[8]; // HH:MM:SS
+
 	while (1)
 	{
-		font_write(p, 0x00FF00, 0, 0, "1.! NYCResistor-Atlantic Pacific");
-		font_write(p, 0xFF0000, 11, 0, "!");
-		font_write(p, 0x00FF00, 224, 0, "8min");
-		
+		strftime(time_buffer, sizeof(time_buffer)/sizeof(char), "%X", last_time);
+		font_write(p, 0x00FF00, 0, 0, time_buffer);
+		//font_write(p, 0xFF0000, 11, 0, "!");
+		//font_write(p, 0x00FF00, 224, 0, "8min");
+
 		int end_x = font_write(p, 0xFF4000, scroll_x, 16, argc > 2 ? argv[2] : "");
 		if (end_x <= 0)
 			scroll_x = width;
