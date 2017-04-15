@@ -56,6 +56,8 @@ ledscape_matrix_config(
 	config->panel_height = 32;
 	config->leds_width = 32;
 	config->leds_height = 32;
+	config->height = 32;
+	config->width = 32;
 
 	char line[1024];
 	int line_num = 1;

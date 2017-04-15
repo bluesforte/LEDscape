@@ -37,7 +37,7 @@ font_write(
 		if (c == '\n')
 		{
 			x = x0;
-			y += 16 * width;
+			y += 16; // width;
 			continue;
 		}
 
@@ -118,21 +118,32 @@ main(
 	printf("init done\n");
 
 	//time_t start_time = time(NULL);
-	time_t last_time = time(NULL);
+	time_t last_time;
+	time(&last_time);
 	unsigned last_i = 0;
 
 	unsigned i = 0;
 	uint32_t * const p = calloc(width*height, 4);
 	int scroll_x = width;
 
+	struct tm *last_time_local;
 	char time_buffer[8]; // HH:MM:SS
+
 
 	while (1)
 	{
-		strftime(time_buffer, sizeof(time_buffer)/sizeof(char), "%X", last_time);
-		font_write(p, 0x00FF00, 0, 0, time_buffer);
-		//font_write(p, 0xFF0000, 11, 0, "!");
-		//font_write(p, 0x00FF00, 224, 0, "8min");
+		last_time_local = localtime(&last_time);
+		// hours in reddish color
+		strftime(time_buffer, 8, "%H", last_time_local);
+		font_write(p, 0xF21DC4, 0, 0, time_buffer);
+		// minutes in blueish color
+		strftime(time_buffer, 8, "%M", last_time_local);
+		font_write(p, 0x45A2B0, width/2, 0, time_buffer);
+		// seconds in dark blue color
+		strftime(time_buffer, 8, "%S", last_time_local);
+		font_write(p, 0x0F23D9, 0, height/2, time_buffer);
+//		font_write(p, 0xFF0000, 11, 0, "!");
+//		font_write(p, 0x00FF00, 224, 0, "8min");
 
 		int end_x = font_write(p, 0xFF4000, scroll_x, 16, argc > 2 ? argv[2] : "");
 		if (end_x <= 0)
@@ -154,6 +165,9 @@ main(
 			last_i = i;
 			last_time = now;
 		}
+
+		//clean up
+//		free(last_time_local);
 
 	}
 

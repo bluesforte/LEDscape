@@ -11,8 +11,8 @@
 #include <unistd.h>
 #include "ledscape.h"
 
-const int width = 256;
-const int height = 128;
+const int width = 32;
+const int height = 32;
 
 extern const uint16_t font[][16];
 
