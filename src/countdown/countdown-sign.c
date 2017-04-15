@@ -133,7 +133,7 @@ main(
 	{
 		last_time_local = localtime(&now);
 		// hours in reddish color
-		strftime(time_buffer, 8, "%H", last_time_local);
+		strftime(time_buffer, 8, "%H: ", last_time_local);
 		font_write(p, 0xF21DC4, 0, 0, time_buffer);
 		// minutes in blueish color
 		strftime(time_buffer, 8, "%M", last_time_local);
