@@ -9,7 +9,7 @@ extern int disp_img(
 	const int img_width,
 	const int img_height,
 	const char * filename
-)
+);
 
 extern int font_write(
   uint32_t * const buf,

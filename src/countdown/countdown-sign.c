@@ -60,7 +60,7 @@ main(
 		strftime(time_buffer, 8, "%S", last_time_local);
 		font_write(p, width, height, 0x0F23D9, 0, height/2, time_buffer);
 
-		disp_img( p, width, height, 0, 0, 32, 32, argv[2] )
+		disp_img( p, width, height, 0, 0, 32, 32, argv[2] );
 
 		/*int end_x = font_write(p, width, height, 0xFF4000, scroll_x, 16, argc > 2 ? argv[2] : "");
 		if (end_x <= 0)

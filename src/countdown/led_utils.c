@@ -70,9 +70,9 @@ int disp_img(
 				continue;
 
 			uint8_t * pix = (uint8_t*) &buf[y*buf_width + x];
-						pix[0] = (uint8_t)png_bytep[xstride * x];
-						pix[1] = (uint8_t)png_bytep[xstride * x + 1];
-						pix[2] = (uint8_t)png_bytep[xstride * x + 2];
+						pix[0] = (uint8_t)row_pointers[xstride * x];
+						pix[1] = (uint8_t)row_pointers[xstride * x + 1];
+						pix[2] = (uint8_t)row_pointers[xstride * x + 2];
 		}
 	}
 
