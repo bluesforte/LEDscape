@@ -17,7 +17,17 @@
 } ledscape_buffer_t;
 */
 
-int disp_img(uint32_t * const buf, int buf_width, int buf_height, const int x0, const int y0, const int img_width, const int img_height, const char * filename) {
+int disp_img(
+	uint32_t * const buf,
+	int buf_width,
+	int buf_height,
+	const int x0,
+	const int y0,
+	const int img_width,
+	const int img_height,
+	const char * filename
+)
+{
 	FILE * const fp = fopen(filename, "r");
 	if (!fp)
 	{
@@ -49,6 +59,22 @@ int disp_img(uint32_t * const buf, int buf_width, int buf_height, const int x0, 
 
 	int png_width = png_get_image_width(png_ptr, info_ptr);
   int png_height = png_get_image_height(png_ptr, info_ptr);
+
+	int xstride = (png_width > img_width) ? png_width/img_width : 1;
+	int ystride = (png_height > img_height) ? png_height/img_height : 1;
+	for (int x=x0; x < img_width; x ++) {
+		for (int y=y0; y < img_height; y ++) {
+			if (x >= png_width)
+				continue;
+			if (y >= png_height)
+				continue;
+
+			uint8_t * pix = (uint8_t*) &buf[y*buf_width + x];
+						pix[0] = (uint8_t)png_bytep[xstride * x];
+						pix[1] = (uint8_t)png_bytep[xstride * x + 1];
+						pix[2] = (uint8_t)png_bytep[xstride * x + 2];
+		}
+	}
 
 	return 0;
 }
@@ -117,8 +143,10 @@ int font_write(
 					continue;
 
 				// wrap in x
-				if (ox < 0)
+				if (ox < 0) {
+					ox %= buf_width;
 					ox += buf_width;
+				}
 
 				if (y + h >= buf_height || y + h < 0)
 					continue;
