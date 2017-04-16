@@ -13,7 +13,8 @@
 #include "ledscape.h"
 #include "led_utils.h"
 
-const int width, height = 32;
+const int width = 32;
+const int height = 32;
 
 int
 main(
