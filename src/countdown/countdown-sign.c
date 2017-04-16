@@ -13,7 +13,7 @@
 #include "ledscape.h"
 #include "led_utils.h"
 
-int width, height;
+const int width, height = 32;
 
 int
 main(
@@ -28,8 +28,8 @@ main(
 		if (!config)
 			return EXIT_FAILURE;
 	}
-	width = config->width;
-	height = config->height;
+	//width = config->width;
+	//height = config->height;
 
 	ledscape_t * const leds = ledscape_init(config, 0);
 
@@ -51,13 +51,13 @@ main(
 		last_time_local = localtime(&now);
 		// hours in reddish color
 		strftime(time_buffer, 8, "%H: ", last_time_local);
-		font_write(p, 0xF21DC4, 0, 0, time_buffer);
+		font_write(p, width, height, 0xF21DC4, 0, 0, time_buffer);
 		// minutes in blueish color
 		strftime(time_buffer, 8, "%M", last_time_local);
-		font_write(p, 0x45A2B0, width/2, 0, time_buffer);
+		font_write(p, width, height, 0x45A2B0, width/2, 0, time_buffer);
 		// seconds in dark blue color
 		strftime(time_buffer, 8, "%S", last_time_local);
-		font_write(p, 0x0F23D9, 0, height/2, time_buffer);
+		font_write(p, width, height, 0x0F23D9, 0, height/2, time_buffer);
 
 		int end_x = font_write(p, 0xFF4000, scroll_x, 16, argc > 2 ? argv[2] : "");
 		if (end_x <= 0)

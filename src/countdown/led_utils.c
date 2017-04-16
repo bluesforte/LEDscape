@@ -2,9 +2,10 @@
 
 #include "led_utils.h"
 
-static int
-font_write(
+static int font_write(
 	uint32_t * const buf,
+	int buf_width,
+	int buf_height,
 	const uint32_t color,
 	const int x0,
 	const int y0,
@@ -23,7 +24,7 @@ font_write(
 		if (c == '\n')
 		{
 			x = x0;
-			y += 16; // width;
+			y += 16; // buf_width;
 			continue;
 		}
 
@@ -35,16 +36,16 @@ font_write(
 		else
 		for (int h = 0 ; h < 16 ; h++)
 		{
-			int width = 0;
+			int buf_width = 0;
 			uint16_t row = ch[h] >> 2;
 			while (row)
 			{
 				row >>= 1;
-				width++;
+				buf_width++;
 			}
 
-			if (width > max_width)
-				max_width = width;
+			if (buf_width > max_width)
+				max_width = buf_width;
 		}
 
 		// add space after the character
@@ -58,20 +59,20 @@ font_write(
 				uint32_t pixel_color = (row & 1) ? color : 0;
 				int ox = x + j;
 /*
-				if (x + j >= width || x + j < 0)
+				if (x + j >= buf_width || x + j < 0)
 					continue;
 */
-				if (ox >= width)
+				if (ox >= buf_width)
 					continue;
 
 				// wrap in x
 				if (ox < 0)
-					ox += width;
+					ox += buf_width;
 
-				if (y + h >= height || y + h < 0)
+				if (y + h >= buf_height || y + h < 0)
 					continue;
 
-				uint8_t * pix = (uint8_t*) &buf[(y+h)*width + ox];
+				uint8_t * pix = (uint8_t*) &buf[(y+h)*buf_width + ox];
 			       	pix[0] = pixel_color >> 16;
 			       	pix[1] = pixel_color >>  8;
 			       	pix[2] = pixel_color >>  0;
