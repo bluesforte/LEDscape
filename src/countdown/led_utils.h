@@ -1,7 +1,5 @@
 #include <stdint.h>
 
-#include "font.h"
-
 extern int font_write(
   uint32_t * const buf,
   int buf_width,

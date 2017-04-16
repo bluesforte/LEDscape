@@ -4,7 +4,7 @@
  */
 #include <stdint.h>
 
-const uint16_t font[][16] = {
+extern const uint16_t font[][16] = {
 ['!'] = {
 	0x0780,
 	0x1fe0,
