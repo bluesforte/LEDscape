@@ -1,9 +1,13 @@
 #include <stdint.h>
+#include <unistd.h>
+#include <zlib.h>
 #include <png.h>
 
 #include "ledscape.h"
 #include "font.h"
 #include "led_utils.h"
+
+#define ERROR -1
 
 // FIXME use structure instead of passing all the info into every function
 /*typedef struct ledscape_buffer_t {
@@ -18,7 +22,7 @@ int disp_img(uint32_t * const buf, int buf_width, int buf_height, const int x0, 
 	if (!fp)
 	{
 		fprintf(stderr, "%s: unable to open\n", filename);
-		return NULL;
+		return ERROR;
 	}
 
 	png_structp png_ptr = png_create_read_struct(
@@ -39,14 +43,14 @@ int disp_img(uint32_t * const buf, int buf_width, int buf_height, const int x0, 
   }
 
 	png_init_io(png_ptr, fp);
-	png_read_png(png_ptr, info_ptr, PNG_TRANSFORM_SCALE_16/*png_transforms*/, NULL)
+	png_read_png(png_ptr, info_ptr, PNG_TRANSFORM_STRIP_16/*png_transforms*/, NULL);
 
 	png_bytep *row_pointers = png_get_rows(png_ptr, info_ptr); //row_pointers is array of length = png.height
 
-	int img_width = png_get_image_width(png_ptr, info_ptr);
-  int img_height = png_get_image_height(png_ptr, info_ptr);
+	int png_width = png_get_image_width(png_ptr, info_ptr);
+  int png_height = png_get_image_height(png_ptr, info_ptr);
 
-	
+	return 0;
 }
 
 int font_write(
