@@ -2,7 +2,7 @@
 
 #include "led_utils.h"
 
-static int font_write(
+int font_write(
 	uint32_t * const buf,
 	int buf_width,
 	int buf_height,

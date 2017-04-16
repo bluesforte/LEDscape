@@ -2,7 +2,7 @@
 
 #include "font.h"
 
-static int font_write(
+extern int font_write(
   uint32_t * const buf,
   int buf_width,
   int buf_height,
