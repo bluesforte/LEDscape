@@ -1,3 +1,6 @@
+#include <stdint.h>
+
+#include "font.h"
 
 static int font_write(
   uint32_t * const buf,

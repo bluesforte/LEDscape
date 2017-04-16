@@ -1,4 +1,6 @@
+#include <stdint.h>
 
+#include "led_utils.h"
 
 static int
 font_write(
