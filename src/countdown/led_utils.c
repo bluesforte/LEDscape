@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include <stdio.h>
 #include <unistd.h>
 #include <zlib.h>
 #include <png.h>
@@ -53,12 +54,13 @@ int disp_img(
   }
 
 	png_init_io(png_ptr, fp);
-	png_read_png(png_ptr, info_ptr, PNG_TRANSFORM_STRIP_16/*png_transforms*/, NULL);
+	png_read_png(png_ptr, info_ptr, PNG_TRANSFORM_STRIP_16 | PNG_TRANSFORM_STRIP_ALPHA /*png_transforms*/, NULL);
 
 	png_bytep *row_pointers = png_get_rows(png_ptr, info_ptr); //row_pointers is array of length = png.height
 
 	int png_width = png_get_image_width(png_ptr, info_ptr);
   int png_height = png_get_image_height(png_ptr, info_ptr);
+	printf("loaded png (w:%d,h:%d)\n", png_width, png_height);
 
 	int xstride = (png_width > img_width) ? png_width/img_width : 1;
 	int ystride = (png_height > img_height) ? png_height/img_height : 1;
@@ -70,11 +72,14 @@ int disp_img(
 				continue;
 
 			uint8_t * pix = (uint8_t*) &buf[y*buf_width + x];
-						pix[0] = (uint8_t)row_pointers[xstride * x];
-						pix[1] = (uint8_t)row_pointers[xstride * x + 1];
-						pix[2] = (uint8_t)row_pointers[xstride * x + 2];
+						pix[0] = (uint8_t)row_pointers[ystride* y][xstride * x];
+						pix[1] = (uint8_t)row_pointers[ystride* y][xstride * x + 1];
+						pix[2] = (uint8_t)row_pointers[ystride* y][xstride * x + 2];
 		}
 	}
+
+	png_destroy_info_struct(png_ptr, &info_ptr);
+	png_destroy_read_struct(&png_ptr, (png_infopp)NULL, (png_infopp)NULL);
 
 	return 0;
 }

@@ -49,7 +49,7 @@ main(
 
 	while (1)
 	{
-		last_time_local = localtime(&now);
+/*		last_time_local = localtime(&now);
 		// hours in reddish color
 		strftime(time_buffer, 8, "%H: ", last_time_local);
 		font_write(p, width, height, 0xF21DC4, 0, 0, time_buffer);
@@ -59,8 +59,8 @@ main(
 		// seconds in dark blue color
 		strftime(time_buffer, 8, "%S", last_time_local);
 		font_write(p, width, height, 0x0F23D9, 0, height/2, time_buffer);
-
-		disp_img( p, width, height, 0, 0, 32, 32, argv[2] );
+*/
+		disp_img( p, width, height, 0, 0, 32, 25, argv[2] );
 
 		/*int end_x = font_write(p, width, height, 0xFF4000, scroll_x, 16, argc > 2 ? argv[2] : "");
 		if (end_x <= 0)
@@ -69,7 +69,7 @@ main(
 			scroll_x--;*/
 
 		ledscape_draw(leds, p);
-		usleep(20000);
+		usleep(1000000);
 
 		now = time(NULL);
 	}
