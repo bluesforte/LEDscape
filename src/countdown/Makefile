@@ -6,7 +6,7 @@
 BIN-y += countdown
 
 countdown.srcs += countdown-sign.c
-countdown.srcs += countdown-font.c
+countdown.srcs += led_utils.c
 
 include ../../Makefile.common
 
