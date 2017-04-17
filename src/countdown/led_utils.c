@@ -100,7 +100,7 @@ int disp_img(
 }
 
 uint32_t* load_png(
-	const char * filename
+	const char * filename,
 	int *width,
 	int *height
 )
@@ -118,16 +118,16 @@ uint32_t* load_png(
 					NULL /*user_error_fn*/,
 					NULL /*user_warning_fn*/
 				);
-  if (!png_ptr)
-     return (NULL);
+	if (!png_ptr)
+     		return (NULL);
 
-  png_infop info_ptr = png_create_info_struct(png_ptr);
-  if (!info_ptr)
-  {
-     png_destroy_read_struct(&png_ptr,
-         (png_infopp)NULL, (png_infopp)NULL);
-     return (NULL);
-  }
+  	png_infop info_ptr = png_create_info_struct(png_ptr);
+	if (!info_ptr)
+  	{
+     		png_destroy_read_struct(&png_ptr,
+         		(png_infopp)NULL, (png_infopp)NULL);
+     		return (NULL);
+  	}
 
 	png_init_io(png_ptr, fp);
 	png_read_png(png_ptr, info_ptr, PNG_TRANSFORM_BGR | PNG_TRANSFORM_EXPAND | PNG_TRANSFORM_PACKING | PNG_TRANSFORM_STRIP_16 /*png_transforms*/, NULL);
@@ -135,12 +135,17 @@ uint32_t* load_png(
 	int png_height = png_get_image_height(png_ptr, info_ptr);
 	int rbytes = png_get_rowbytes(png_ptr, info_ptr);
 
-	uint32_t *row_pointers = (uint32_t *)malloc(png_height * rbytes)
+//	uint32_t *row_pointers = (uint32_t *)calloc(png_height * rbytes, 4);
+        png_bytep *row_pointers = (png_bytep *) malloc(sizeof(png_bytep) * png_height);
+        for (int y=0; y<png_height; y++)
+                row_pointers[y] = (png_bytep) malloc(rbytes);
+
 	if (!row_pointers) {
 		png_destroy_read_struct(&png_ptr, &info_ptr, (png_infopp)NULL);
 		return NULL;
 	}
 
+	//printf("loaded png (w:%d,h:%d)\n", png_width, png_height);
 	png_read_image(png_ptr, row_pointers);
 
 	printf("loaded png (w:%d,h:%d)\n", png_width, png_height);

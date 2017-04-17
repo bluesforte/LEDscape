@@ -12,7 +12,7 @@ extern int disp_img(
 );
 
 uint32_t* load_png(
-	const char * filename
+	const char * filename,
 	int *width,
 	int *height
 );

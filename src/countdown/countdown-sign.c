@@ -50,7 +50,7 @@ main(
 	char * img_filename = (argc > 2) ? argv[2] : "/home/harry/src/LEDscape/src/countdown/whirlyball.png";
 	int img_width, img_height;
 
-	int32_t *img = load_png(img_filename, &img_width, &img_height);
+	uint32_t *img = load_png(img_filename, &img_width, &img_height);
 
 	while (1)
 	{
@@ -79,7 +79,6 @@ main(
 
 			ledscape_draw(leds, p);
 			usleep(100000);
-		}
 
 	}
 
