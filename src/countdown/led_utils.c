@@ -99,6 +99,83 @@ int disp_img(
 	return 0;
 }
 
+uint32_t* load_png(
+	const char * filename
+	int *width,
+	int *height
+)
+{
+	FILE * const fp = fopen(filename, "r");
+	if (!fp)
+	{
+		fprintf(stderr, "%s: unable to open\n", filename);
+		return (NULL);
+	}
+
+	png_structp png_ptr = png_create_read_struct(
+        	PNG_LIBPNG_VER_STRING,
+					(png_voidp)NULL /*user_error_ptr*/,
+					NULL /*user_error_fn*/,
+					NULL /*user_warning_fn*/
+				);
+  if (!png_ptr)
+     return (NULL);
+
+  png_infop info_ptr = png_create_info_struct(png_ptr);
+  if (!info_ptr)
+  {
+     png_destroy_read_struct(&png_ptr,
+         (png_infopp)NULL, (png_infopp)NULL);
+     return (NULL);
+  }
+
+	png_init_io(png_ptr, fp);
+	png_read_png(png_ptr, info_ptr, PNG_TRANSFORM_BGR | PNG_TRANSFORM_EXPAND | PNG_TRANSFORM_PACKING | PNG_TRANSFORM_STRIP_16 /*png_transforms*/, NULL);
+	int png_width = png_get_image_width(png_ptr, info_ptr);
+	int png_height = png_get_image_height(png_ptr, info_ptr);
+	int rbytes = png_get_rowbytes(png_ptr, info_ptr);
+
+	uint32_t *row_pointers = (uint32_t *)malloc(png_height * rbytes)
+	if (!row_pointers) {
+		png_destroy_read_struct(&png_ptr, &info_ptr, (png_infopp)NULL);
+		return NULL;
+	}
+
+	png_read_image(png_ptr, row_pointers);
+
+	printf("loaded png (w:%d,h:%d)\n", png_width, png_height);
+
+	png_destroy_read_struct(&png_ptr, &info_ptr, (png_infopp)NULL);
+
+	*width = png_width;
+	*height = png_height;
+	return row_pointers;
+}
+
+void unload_png(uint32_t * png_data) {
+	free(png_data);
+}
+
+int disp_img2(uint32_t * const buf, int buf_width, int buf_height, int x0, int y0, const uint32_t * const image, int img_width, int img_height) {
+	int imgx = -1;
+	int imgy = -1;
+
+	for (int y = y0; y < buf_height; y++) {
+		imgy++;
+		if (y < 0)
+			continue;
+
+		for (int x = x0; x < buf_width; x++) {
+			imgx++;
+			if (x < 0)
+				continue;
+
+			uint32_t * pix = (uint32_t*) &buf[y*buf_width + x];
+			pix = image[imgy*img_width + imgx];
+		}
+	}
+}
+
 int font_write(
 	uint32_t * const buf,
 	int buf_width,
