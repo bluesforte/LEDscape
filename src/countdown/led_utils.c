@@ -54,7 +54,7 @@ int disp_img(
   }
 
 	png_init_io(png_ptr, fp);
-	png_read_png(png_ptr, info_ptr, PNG_TRANSFORM_STRIP_16 | PNG_TRANSFORM_STRIP_ALPHA /*png_transforms*/, NULL);
+	png_read_png(png_ptr, info_ptr, PNG_TRANSFORM_PACKING | PNG_TRANSFORM_STRIP_16 | PNG_TRANSFORM_STRIP_ALPHA /*png_transforms*/, NULL);
 
 	png_bytep *row_pointers = png_get_rows(png_ptr, info_ptr); //row_pointers is array of length = png.height
 
@@ -72,9 +72,9 @@ int disp_img(
 				continue;
 
 			uint8_t * pix = (uint8_t*) &buf[y*buf_width + x];
-						pix[0] = (uint8_t)row_pointers[ystride* y][xstride * x * 3];
-						pix[1] = (uint8_t)row_pointers[ystride* y][xstride * x * 3 + 1];
-						pix[2] = (uint8_t)row_pointers[ystride* y][xstride * x * 3 + 2];
+						pix[0] = (uint8_t)row_pointers[ystride* y][xstride * x];
+						pix[1] = (uint8_t)row_pointers[ystride* y][xstride * x + png_width ];
+						pix[2] = (uint8_t)row_pointers[ystride* y][xstride * x + 2*png_width ];
 		}
 	}
 
