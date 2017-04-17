@@ -54,27 +54,42 @@ int disp_img(
   }
 
 	png_init_io(png_ptr, fp);
-	png_read_png(png_ptr, info_ptr, PNG_TRANSFORM_PACKING | PNG_TRANSFORM_STRIP_16 | PNG_TRANSFORM_STRIP_ALPHA /*png_transforms*/, NULL);
+	png_read_png(png_ptr, info_ptr, PNG_TRANSFORM_PACKING | PNG_TRANSFORM_STRIP_ALPHA | PNG_TRANSFORM_STRIP_16  /*png_transforms*/, NULL);
 
 	png_bytep *row_pointers = png_get_rows(png_ptr, info_ptr); //row_pointers is array of length = png.height
 
 	int png_width = png_get_image_width(png_ptr, info_ptr);
-  int png_height = png_get_image_height(png_ptr, info_ptr);
-	printf("loaded png (w:%d,h:%d)\n", png_width, png_height);
+	int png_height = png_get_image_height(png_ptr, info_ptr);
 
-	int xstride = (png_width > img_width) ? png_width/img_width : 1;
-	int ystride = (png_height > img_height) ? png_height/img_height : 1;
-	for (int x=x0; x < img_width; x ++) {
-		for (int y=y0; y < img_height; y ++) {
-			if (x >= png_width)
-				continue;
-			if (y >= png_height)
+	int color_depth = png_get_bit_depth(png_ptr, info_ptr);
+	int color_type = png_get_color_type(png_ptr, info_ptr);
+	int ilace_type = png_get_interlace_type(png_ptr, info_ptr);
+	int channels = png_get_channels(png_ptr, info_ptr);
+	int rbytes = png_get_rowbytes(png_ptr, info_ptr);
+
+	printf("loaded png (w:%d,h:%d), depth:%d ctype:%d ilace_type:%d channels:%d, rbytes:%d\n", png_width, png_height, color_depth, color_type, ilace_type, channels, rbytes);
+	//printf("CTYPEGRAY:%d GRAY_ALPHA:%d PALETTE:%d RGB:%d RGBA:%d", PNG_COLOR_TYPE_GRAY, PNG_COLOR_TYPE_GRAY_ALPHA, PNG_COLOR_TYPE_PALETTE, PNG_COLOR_TYPE_RGB, PNG_COLOR_TYPE_RGB_ALPHA);
+
+	//int xstride = (png_width > img_width) ? png_width/img_width : 1;
+	//int ystride = (png_height > img_height) ? png_height/img_height : 1;
+	int xstride = 1;
+	int ystride = 1;
+	for (int y=0; y < buf_height; y ++) {
+		if (y0+y >= png_height)
+			continue;
+
+		png_byte *row = row_pointers[y0+y];
+
+		for (int x=0; x < buf_width; x ++) {
+			if (x0+x >= png_width)
 				continue;
 
+			png_byte *png_pix = &(row[(x0 + x)*3]);
 			uint8_t * pix = (uint8_t*) &buf[y*buf_width + x];
-						pix[0] = (uint8_t)row_pointers[ystride* y][xstride * x];
-						pix[1] = (uint8_t)row_pointers[ystride* y][xstride * x + png_width ];
-						pix[2] = (uint8_t)row_pointers[ystride* y][xstride * x + 2*png_width ];
+						// PNG stores in RGB format, pixels are in BGR format
+						pix[0] = png_pix[2];
+						pix[1] = png_pix[1];
+						pix[2] = png_pix[0];
 		}
 	}
 

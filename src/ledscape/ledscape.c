@@ -243,8 +243,8 @@ ledscape_matrix_panel_copy(
 			// they are drawn simultaneously.
 			uint8_t * const pix = &out[x*row_stride + (y/16)*3 + (y%16)*row_len];
 
-			pix[0] = (col >> 16) & 0xFF; // red
-			pix[1] = (col >>  8) & 0xFF; // green
+			pix[0] = (((col >> 16) & 0xFF) * 35 / 100) & 0xFF; // red
+			pix[1] = (((col >>  8) & 0xFF) * 24 / 100) & 0xFF; // green
 			pix[2] = (col >>  0) & 0xFF; // blue
 			//printf("%d,%d => %p %p %08x\n", x, y, pix, col_ptr, col);
 		}
