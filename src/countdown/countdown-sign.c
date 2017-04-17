@@ -44,7 +44,12 @@ main(
 	uint32_t * const p = calloc(width*height, 4);
 
 	struct tm *time_local;
-	const struct tm *time_target;
+	struct tm *time_target = localtime(time(NULL));
+
+	// set datetime of 4/20 @ 7am
+	time_target.tm_mon = 04; time_target.tm_mday = 20;
+	time_target.tm_hour = 07; time_target.tm_min = 00;	time_target.tm_sec = 00;
+
 	char time_buffer[8]; // HH:MM:SS
 
 	char * img_filename = (argc > 2) ? argv[2] : "/home/harry/src/LEDscape/src/countdown/whirlyball.png";
@@ -54,31 +59,35 @@ main(
 
 	while (1)
 	{
-		now = time(NULL);
+		time(&now);
 		time_local = localtime(&now);
-/*
+		double seconds = difftime(mktime(time_target), now);
+
+		// days in dark green color
+		sprintf(time_buffer, "%00.f: ", seconds / (3600 * 24) );
+		font_write(p, width, height, 0x920FFF, 0, 0, time_buffer);
+
 		// hours in reddish color
-		strftime(time_buffer, 8, "%H: ", last_time_local);
+		sprintf(time_buffer, "%00.f: ", (seconds / 3600) % 24 );
 		font_write(p, width, height, 0xF21DC4, 0, 0, time_buffer);
 		// minutes in blueish color
-		strftime(time_buffer, 8, "%M", last_time_local);
+		//strftime(time_buffer, 8, "%M", time_local);
+		sprintf(time_buffer, "%00.f: ", (seconds / 60) % 60 );
 		font_write(p, width, height, 0x45A2B0, width/2, 0, time_buffer);
 		// seconds in dark blue color
-		strftime(time_buffer, 8, "%S", last_time_local);
+		//strftime(time_buffer, 8, "%S", time_local);
+		sprintf(time_buffer, "%00.f: ", seconds % 60 );
 		font_write(p, width, height, 0x0F23D9, 0, height/2, time_buffer);
-*/
-		//for (int xscroll = 0; xscroll < 75; xscroll++) {
-		//	disp_img( p, width, height, xscroll, 10, 32, 25, argv[2] );
-		/*int end_x = font_write(p, width, height, 0xFF4000, scroll_x, 16, argc > 2 ? argv[2] : "");
-		if (end_x <= 0)
-			scroll_x = width;
-		else
-			scroll_x--;*/
 
-			disp_img2(p, width, height, 1,1, img, img_width, img_height);
+		ledscape_draw(leds, p);
+		usleep(10000000);
 
+		for (int xscroll = 0; xscroll < 50; xscroll++) {
+			//disp_img2(p, width, height, 1,1, img, img_width, img_height);
+			disp_img( p, width, height, xscroll, 10, 32, 32, img_filename );
 			ledscape_draw(leds, p);
-			usleep(100000);
+			usleep(200000);
+		}
 
 	}
 
